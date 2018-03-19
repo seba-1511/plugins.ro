@@ -2,21 +2,23 @@
 
 import randopt as ro
 from randopt_plugins.live import Live
-from time import sleep
+from time import sleep, time
 
 if __name__ == '__main__':
     exp = ro.Experiment('live_example', params={
         'x': ro.Gaussian(),
         'y': ro.Gaussian()
     })
-    live = Live(exp, metrics=['square', 'norm', 'xminusy'])
+    live = Live(exp, metrics=['square', 'norm', 'xminusy', 'time'])
 
-    for i in range(10):
+    start = time()
+    for i in range(100):
         live.sample_all_params()
         live.update('square', live.x**2)
         live.update({
             'norm': abs(exp.y),
-            'xminusy': exp.x - exp.y
+            'xminusy': exp.x - exp.y,
+            'time': time() - start
         })
         print(live.table_metrics())
         live.plot_metrics()

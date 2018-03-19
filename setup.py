@@ -18,5 +18,6 @@ setup(
         download_url = 'https://github.com/seba-1511/randopt_plugins/archive/0.0.1.zip',
         license='License :: OSI Approved :: Apache Software License',
         classifiers=[],
-        scripts=[]
+        scripts=[],
+        install_requires=open('requirements.txt', 'r').read().split('\n'),
 )

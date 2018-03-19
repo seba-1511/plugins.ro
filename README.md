@@ -51,7 +51,9 @@ live.add_result(exp.x - exp.y, data={'useless': [0, 0, 0, 0]})
 ### Screenshots
 
 **Live Plotting**
+
 ![](./assets/images/live_plot.png)
 
 **Live Table**
+
 ![](./assets/images/live_table.png)

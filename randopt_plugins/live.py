@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import math
+import time
+import numpy as np
 from matplotlib import pyplot as plt
 from terminaltables import SingleTable
 
@@ -43,9 +45,15 @@ class Live(object):
         grid_size = int(math.ceil(math.sqrt(num_plots))) 
         grid_prefix = 110 * grid_size
         self.subplots = []
+        self.lines = []
+        plt.ion()
+        plt.suptitle(self.experiment.name + ' Live Metrics')
         for i, m_key in enumerate(self.metrics.keys()):
             sbp = plt.subplot(grid_prefix + i + 1)
             self.subplots.append(sbp)
+            line, = sbp.plot([], [], label=m_key)
+            sbp.legend()
+            self.lines.append(line)
 
     def plot_metrics(self):
         # Updates live visualizations for all metrics
@@ -53,15 +61,18 @@ class Live(object):
         if self.subplots is None:
             self._create_subplots()
 
-        for sbp, m_key in zip(self.subplots, self.metrics.keys()):
+#        for sbp, m_key in zip(self.subplots, self.metrics.keys()):
+        for sbp, line, m_key in zip(self.subplots, self.lines, self.metrics.keys()):
             y = self.metrics[m_key]
             x = list(range(len(y)))
-            sbp.clear()
-            sbp.plot(x, y, label=m_key)
-            sbp.legend()
+            line.set_data(np.array(x), np.array(y))
+            sbp.set_xlim(0, len(x))
+            sbp.set_ylim(min(y) - 0.1 * abs(min(y)),
+                         max(y) + 0.1 * abs(max(y)))
 
         # This renders the figure
-        plt.pause(0.0001)
+        plt.draw()
+        plt.pause(1.5)
 
     def add_result(self, *args, **kwargs):
         if 'data' in kwargs:
